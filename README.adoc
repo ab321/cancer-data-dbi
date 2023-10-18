@@ -1,3 +1,18 @@
 = Cancer Data DBI
 
-== Said Nurceski, Julian Schludermann, Abdullah Al Desoky, Laurent Mali
+== Team
+* Abdullah Aldesoky
+* Laurent Mali
+* Said Nurceski
+* Julian Schudermann
+
+== Spezien
+* Mensch
+* Maus
+* Fliege
+
+== Fragen
+* Statistic Score (%)
+** überleben oder sterben
+* Attribute ?????????
+** C bei essentiality und Attribute bei .csv & .txt
