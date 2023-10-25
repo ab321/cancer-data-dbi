@@ -1,0 +1,24 @@
+@startuml
+entity Organism {
+    name
+}
+
+entity Gene {
+    ncbiGeneId
+    ncbiGeneName
+    essentialityScore
+}
+
+entity SyntheticLethality {
+    statisticScore
+}
+
+entity PredictedOrtholog {
+}
+
+SyntheticLethality "n" -- "2" Gene
+Gene "n" -- "1" Organism
+Gene "2" -- "n" PredictedOrtholog
+
+
+@enduml
