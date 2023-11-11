@@ -3,3 +3,4 @@
 identifier.sqlite
 docs/mom/
 db/
+**/node_modules/
