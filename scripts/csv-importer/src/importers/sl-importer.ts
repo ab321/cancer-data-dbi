@@ -35,7 +35,7 @@ export class SyntheticLethalityImporter extends Importer {
                     let statisticsScore: number = Number(data[7]);
 
                     // skip broken data
-                    if (isNaN(gene2Id) || isNaN(gene1Id)) {
+                    if (isNaN(gene2Id) || isNaN(gene1Id) || data.length !== 8 || isNaN(statisticsScore)) {
                         console.warn(`[IMPORT SL]: Faulty data! (skipping): "${lines[i]}"`);
                         continue;
                     }

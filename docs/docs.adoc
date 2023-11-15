@@ -1,0 +1,79 @@
+= SynLet DB
+
+== Team
+* Abdullah Al-Desoky
+* Laurent Mali
+* Said Nurćeski
+* Julian Schludermann
+
+== Aufgabenstellung
+* Es soll eine Datenbank zur Suche von synthetisch lethalen Paaren erstellt werden
+* Als input wird ein menschliches Gen gegeben
+* Der Output ist eine Liste von synthetisch lethalen Paaren und ein "Score" der Angibt wie erforscht / wirksam das synthetisch lethale Paar ist
+
+== Verwendete Daten
+* *CSEGs_CEGs.txt*: https://v3.ogee.info/static/files/CSEGs_CEGs.txt.gz
+** Spalten:
+*** *gene*: ncbi symbol for the gene
+*** *essentiality*: Essentiality score for the given gene
+**** *CSEGs*: Cancer-specific essential genes (internally evaluated as score 10%)
+**** *CEGs*: Core-essential genes (internally evaluated as score 80%)
+*** *ncbi_id*: ncbi_id for the given gene
+*** [line-through]#*ensembl*#: unused / irrelevant
+** https://www.ncbi.nlm.nih.gov/gene[Ncbi Search]
+* *Synthetic lethalities*
+** Dateien:
+*** *Fly_SL.csv*: https://synlethdb.sist.shanghaitech.edu.cn/static/download/SL/Fly_SL.csv
+*** *Human_SL.csv*: https://synlethdb.sist.shanghaitech.edu.cn/static/download/SL/Human_SL.csv
+*** *Mouse_SL.csv*: https://synlethdb.sist.shanghaitech.edu.cn/static/download/SL/Mouse_SL.csv
+** Spalten:
+*** *n1.name*: ncbi name of the first gene
+*** *n1.identifier*: ncbi id of the first gene
+*** *n2.name*: ncbi name of the second gene
+*** *n2.identifier*: ncbi id of the second gene
+*** [line-through]#*r.cell_line*#: unused / irrelevant
+*** [line-through]#*r.pubmed_id*#: unused / irrelevant
+*** [line-through]#*r.source*#: unused / irrelevant
+*** *r.statistic_score*: statistic score representing the "quality" of the pair
+* *Orthology Files*
+** Dateien:
+*** *human-2-mouse.txt*: https://omabrowser.org/cgi-bin/gateway.pl?f=PairwiseOrthologs&p1=HUMAN&p2=MOUSE&p3=EntrezGene
+*** *human-2-fly.txt*: https://omabrowser.org/cgi-bin/gateway.pl?f=PairwiseOrthologs&p1=HUMAN&p2=DROME&p3=EntrezGene
+** Spalten:
+*** *1. Spalte*: ncbi_id of human gene
+*** *2. Spalte*: ncbi_id of mouse / fly gene
+*** [line-through]#3.+4. Spalte#: irrelevant / unused
+** Invalid data: Viele spalten enthatlen OMAID's und keine ncbi_id's. Diese Spalten werden beim import in die Datenbank einfach weggeworfen.
+
+== ERD
+plantuml::puml/erd.puml[]
+
+=== Create script
+[source, sql]
+----
+include::sql/create-tables.sql[]
+----
+
+=== Insert organisms
+[source, sql]
+----
+include::sql/insert-organisms.sql[]
+----
+
+== Verwendete Datenbank
+Die bei dem Projekt verwendete Datenbank ist *sqlite*.
+
+== Datenbank import
+Der Import der Daten in die Datenbank wurde über Typescript-scripts gelöst.
+
+=== Ausführung
+Bevor der Datenbank Import ausgeführt werden kann müssen `create-tables.sql` und `insert-organisms.sql` ausgeführt werden. Sobald dies gegeben ist importieren folgende Befehle die Daten aus den CSV Dateien.
+[source, bash]
+----
+cd scripts/csv-importer
+npm i # Wird nur benötigt bei erstmaligem Ausführen
+npm start
+----
+
+=== Ungültige Daten
+Jene Daten die nicht dem erwarteten Format folgen, werden beim Einfügen ignoriert und als warning auf die Konsole ausgegeben.
