@@ -77,3 +77,63 @@ npm start
 
 === Ungültige Daten
 Jene Daten die nicht dem erwarteten Format folgen, werden beim Einfügen ignoriert und als warning auf die Konsole ausgegeben.
+
+== SynLet Suche
+Die SynLet suche wurde über ein Typescript Programm gelöst.
+Die Suche nach synthetisch lethalen Paaren läuft grob wiefolgt ab:
+
+* Input des Menschengens
+* Suche nach SynLets beim Menschen
+** Berechnung des Scores je SynLet
+*** Formel: `(1 - essentialityInput) * (1 -  essentialitySynLet) * scoreSynLet`
+** Menschen SynLets ausgeben
+* Für jeden anderen Organismus
+** Input Menschengen auf Organismusgene umwandeln
+** Finden von SynLets für jedes der Organismusgene
+** SynLet Gene umwandeln auf Menschengene
+*** Berechnung von Scores
+** Menschengene ausgeben
+
+Die Beschreibung oberhalb ist eine Vereinfachung des wirklichen Ablaufs. Es werden dazwischen noch einige Informationen zu den zwischenergebnissen ausgegeben.
+
+=== Ausführen der Suche
+[source, bash]
+----
+cd scripts/synlet-search
+npm i # Wird nur benötigt bei erstmaligem Ausführen
+npm start <human gene id>
+----
+
+=== "Gute" Testbeispiele
+==== Definition von gut
+* Menschengen kann zu Maus- und Fliegengenen zugeordnet werden
+* Maus- und Fliegengene müssen syntethisch lethale Paare besitzen
+
+==== SQL request zum Finden von guten Testbeispielen
+[source, sql]
+----
+include::sql/test-query.sql[]
+----
+Diese SQL Abfrage ist relativ langsam, aber nach einigen Minuten erhält man folgende Ergebnisse (ncbi_ids):
+
+* 203
+* 1856
+* 1857
+* 2067
+* 2475
+* 4361
+* 5347
+* 5594
+* 5599
+* 5879
+* 5888
+* 7975
+* 8318
+* 10054
+* 11200
+
+Aufgrund der Menge können die Ids manuell ausprobiert werden. Die ncbi_id mit dem längsten Output ist `5888`. Natürlich ist diese ID nicht DIE beste und deckt auch nicht alle Testfälle ab. Allerdings können einige (auch etwas komplexere) Auswertung von Zusammenhängen damit überprüft werden.
+
+Ein kleines Testbeispiel ist hingegen `7975`. Der Output dafür wäre (wird auf die nächste Seite geschoben...):
+
+image::images/sample-output.png[]
